@@ -6,7 +6,6 @@
         <link rel="stylesheet" href="css/temp_style.css"/>
     </head>
     <body>
-        <div id="wrapper">
         <?php
             //temp_converter.php
 
@@ -111,10 +110,10 @@
                     </label>
 
                     <input type="submit" name="Submit" value="Convert">
+                    <br /><br /><button type="button"><a href="https://docs.google.com/document/d/1QH4H96UAvx4-p0w3csVmFJXbdRYrMBXjUvs-e50RMa8/edit?usp=sharing">Click to View Web Log</a></button>
                 </form>
                 ';
             }
             ?>
-            </div>
     </body>
 </html>
