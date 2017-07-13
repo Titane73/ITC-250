@@ -20,12 +20,14 @@ public $quantity = 0;
     
 }//end of item class
 
-$items[] = new item('Classic Hot Dog', 'Kosher Hot Dog - $9.95', 9.95);
-$items[] = new item('Chili Dog', 'Kosher Hot Dog, topped with mustard, chili and diced onions - $13.95', 13.95);
-$items[] = new item('Seattle-style Hot Dog','Kosher Hot Dog, served with cream cheese and grilled onions on a toasted bun - $7.95', 7.95);
-$items[] = new item('Chicago-style hot dog','Kosher all-beef on a steamed bun, topped with yellow mustard, chopped white onions, a dill pickle spear, tomato slices, Chicago-style relish, hot sport peppers, and a dash of celery salt - $6.95', 6.95);
-$items[] = new item('Big Kahuna Burrito','A mega combo of steak, chicken, and chorizo, mixed with chipotle beans - $9.95', 9.95);
-$items[] = new item('Gazpacho','Andalusian cold soup, served with fresh corn tortillas - $9.95', 9.95);
+$items[] = new item('Classic Hot Dog','Kosher hot dog - $9.95', 7.95);
+$items[] = new item('Chili Dog','Kosher hot dog, topped with mustard, chili and chopped white onions - $13.95', 9.95);
+$items[] = new item('Seattle-style Hot Dog','Kosher Hot Dog, served with cream cheese and grilled onions on a toasted bun - $10.95', 7.95);
+$items[] = new item('Chicago-style hot dog','Kosher all-beef on a steamed bun, topped with mustard, chopped white onions, dill pickle, tomato slices, Chicago-style relish, and celery salt - $13.95', 13.95);
+$items[] = new item('Burger','1/3 lb. beef patty topped with onions, lettuce, tomato, mayo - $9.95', 9.95);
+$items[] = new item('Cheese Burger','1/3 lb. beef patty topped with cheese, onions, lettuce, tomato, mayo - $8.95', 8.95);
+$items[] = new item('Bacon Burger','1/3 lb. beef patty topped with bacon, onions, lettuce, tomato, mayo - $11.95', 11.95);
+$items[] = new item('Salad','Plain salad - $5.95', 5.95);
 
 /*
 // add Sides to item Class
