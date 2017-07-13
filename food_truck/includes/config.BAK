@@ -1,0 +1,100 @@
+<?php
+/*
+config.php
+
+Provides a place to put all configuration info 
+for our app
+
+*/
+
+ob_start(); #buffers our page to be prevent header errors. Call before INC files or ANY html!
+
+include 'credentials.php';
+include 'common.php';//stores our functions
+include 'MyAutoLoader.php'; //loads class that autoloads all classes in include folder
+include 'Pager.php'; 
+ 
+define('DEBUG',true); #we want to see all errors
+
+//THIS_PAGE is the name of the current page
+define('THIS_PAGE',basename($_SERVER['PHP_SELF']));
+
+/* use the following path settings for placing all code in one application folder */ 
+define('VIRTUAL_PATH', 'http://www.lindesara.com/itc240/sandbox/assignments-lc/leather_coffee/'); # Virtual (web) 'root' of application for images, JS & CSS files
+
+define('PHYSICAL_PATH', '/home/sarlin18/lindesara.com/itc240/sandbox/assignments-lc/leather_coffee/'); # Physical (PHP) 'root' of application for file & upload reference
+
+define('INCLUDE_PATH', PHYSICAL_PATH . 'includes/'); # Path to PHP include files - INSIDE APPLICATION ROOT
+
+header("Cache-Control: no-cache");header("Expires: -1");#Helps stop browser & proxy caching
+
+date_default_timezone_set('America/Los_Angeles'); #sets default date/timezone for this website
+
+
+
+$nav1['index.php'] = "home";   
+$nav1['ourwork.php'] = "our work"; 
+$nav1['testimonials.php'] = "testimonials"; 
+$nav1['projects.php'] = "projects"; 
+$nav1['contact.php'] = "contact us"; 
+$nav1['maps.php'] = "maps"; 
+
+// echo THIS_PAGE;
+// die; 
+
+ob_start(); 
+
+switch(THIS_PAGE) 
+{
+    case "index.php": 
+        $title = "Home page";
+        $pageID = "home page"; 
+        $pic = '<img src="images/spinifex1.jpg" />'; 
+        break;
+    
+    case "ourwork.php": 
+        $title = "Our work page"; 
+        $pageID = "our work page"; 
+        $pic = '<img src="images/spinifex2.jpg" />';
+        break;
+    
+        
+    case "testimonials.php": 
+        $title = "Testimonials page";
+        $pageID = "testimonials page"; 
+        $pic = '<img src="images/spinifex3.jpg" />';
+        break;
+    
+        
+    case "projects.php": 
+        $title = "Projects page";
+        $pageID = "projects page"; 
+        $pic = '<img src="images/spinifex4.jpg" />';
+        break;
+    
+        
+    case "contact.php": 
+        $title = "Contact Us page";
+        $pageID = "contact us page"; 
+        $pic = '<img src="images/spinifex5.jpg" />';
+        break;
+        
+        
+    case "maps.php": 
+        $title = "Maps page";
+        $pageID = "maps page"; 
+        $pic = '<img src="images/spinifex6.jpg" />';
+        break;
+    
+        
+    default: 
+        $title = THIS_PAGE;
+        $pageID = ""; 
+        $pic = '<img src="images/spinifex1.jpg" />';
+}
+
+
+
+//Here are the keys for the server: lindesara.com
+$siteKey = "6LfY3hQTAAAAALqw7wkWTM5lRpTzhowstYYF4lub";
+$secretKey = "6LfY3hQTAAAAAIU-wyXU7I5A8l0El4gJ41c1AlIA";
