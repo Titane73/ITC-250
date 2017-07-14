@@ -36,8 +36,3 @@ $sides[] = new item('Salsa','Our house salsa, with Habanero peppers and tomatill
 $sides[] = new item('Sour Cream','Have a little cream to cool off, after that salsa! - $0.45',0.45);
 $sides[] = new item('Tortilla Chips','Freshly made with our own tortillas! - $1.95',1.95);
 */
-//test
-/*echo $item6->Name . "<br />";
-echo $item6->Description . "<br />";
-echo $item6->Price;
-*/
