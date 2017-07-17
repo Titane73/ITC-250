@@ -76,6 +76,7 @@
                     <div class="submit">
                         <input type="Submit" id="submit" value="Click Here To Total Up Your Order!" />
                     </div>
+                    
                 
                 </form>
                 <!-- END HTML FORM -->
@@ -108,8 +109,9 @@
                 </p>
                 <p>
                     <strong>Total: </strong><?='$'.money_format('%!.2n',$cart->getTotal($items))?>
-                </p>
-                    
+                </p></br></br>
+                <a href="https://docs.google.com/document/d/13LCVzcb8znPYGRM2xgdhTkPcC2kfPQeOeP9OZHyiiaQ/edit?usp=sharing">Click to View Web Log</a></br></br>
+                <a href="https://github.com/kyrrahnork/ITC-250/tree/master/food_truck">Click to View GitHub Repo</a>
             </aside>
         </div>
     </body>
