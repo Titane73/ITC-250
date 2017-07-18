@@ -1,6 +1,6 @@
 <?php
 /*
- * @package Dana's Weiner Hut
+ * @package SurveySez
  * @author Kyrrah Nork <kyrrahnork@gmail.com>
  * @author Nicole Brown <giantspork@gmail.com>
  * @author Ron Hamasaki <shinobu.kinjo@gmail.com>
@@ -12,24 +12,25 @@
  * @todo none
 */
 
-#item class
 class item{
-
+#set the variable initial values
 public $name = '';
 public $description = '';
 public $price = 0;
 public $quantity = 0;
 
-# constructor
+#constructor
     public function __construct($name, $description, $price){
 
      $this->name = $name;
      $this->description = $description;
      $this->price = $price;
         
-    }#end class constructor
+    }//end class constructor
     
-}#end of item class
+}//end of item class
+
+#fill array with items to be displayed on the menu
 
 $items[] = new item('Classic Hot Dog','Kosher hot dog - $9.95', 7.95);
 $items[] = new item('Chili Dog','Kosher hot dog, topped with mustard, chili and chopped white onions - $13.95', 9.95);
@@ -41,7 +42,7 @@ $items[] = new item('Bacon Burger','1/3 lb. beef patty topped with bacon, onions
 $items[] = new item('Salad','Plain salad - $5.95', 5.95);
 
 /*
-# add Sides to item Class
+// add Sides to item Class
 $sides[] = new item('Guacamole','Hand-mixed, with Haas avocados and fresh cilantro - $1.95',1.95);
 $sides[] = new item('Salsa','Our house salsa, with Habanero peppers and tomatillos. Extra spicy! - $0.95',0.95);
 $sides[] = new item('Sour Cream','Have a little cream to cool off, after that salsa! - $0.45',0.45);
