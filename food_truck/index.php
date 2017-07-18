@@ -1,7 +1,7 @@
 <?php 
 
 /*
- * @package Dana's Weiner Hut
+ * @package foodTruck
  * @author Kyrrah Nork <kyrrahnork@gmail.com>
  * @author Nicole Brown <giantspork@gmail.com>
  * @author Ron Hamasaki <shinobu.kinjo@gmail.com>
@@ -109,8 +109,8 @@
                 </p>
                 <p>
                     <strong>Total: </strong><?='$'.money_format('%!.2n',$cart->getTotal($items))?>
-                </p></br></br>
-                <a href="https://docs.google.com/document/d/13LCVzcb8znPYGRM2xgdhTkPcC2kfPQeOeP9OZHyiiaQ/edit?usp=sharing">Click to View Web Log</a></br></br>
+                </p><br /><br />
+                <a href="https://docs.google.com/document/d/13LCVzcb8znPYGRM2xgdhTkPcC2kfPQeOeP9OZHyiiaQ/edit?usp=sharing">Click to View Web Log</a><br /><br />
                 <a href="https://github.com/kyrrahnork/ITC-250/tree/master/food_truck">Click to View GitHub Repo</a>
             </aside>
         </div>

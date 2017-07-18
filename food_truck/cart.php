@@ -1,7 +1,7 @@
 <?php
 
 /*
- * @package Dana's Weiner Hut
+ * @package foodTruck
  * @author Kyrrah Nork <kyrrahnork@gmail.com>
  * @author Nicole Brown <giantspork@gmail.com>
  * @author Ron Hamasaki <shinobu.kinjo@gmail.com>
@@ -22,9 +22,9 @@ class Cart {
         
     }
     
-    
-      #Returns pre-tax subtotal for cart items.
-     
+    /*
+     *  Returns subtotal (untaxed) for items in the cart.
+     */
     public function getSubtotal($itm_array){
         $subTotal = 0.0;
             foreach ($itm_array as $item){
@@ -33,17 +33,18 @@ class Cart {
         return $subTotal;
     }
     
-    
-      #If items in cart, return tax total, else return 0.
-     
+    /*
+     *  Returns total tax for items in cart if items are in the cart, or else
+     * returns 0.
+     */
     public function getTax($itm_array){
         $tax = ($this->getSubtotal($itm_array) * $this->SALES_TAX);
         return $tax;
     }
     
-    
-        #If cart not empty, return total price for items in cart , else return 0.
-     
+    /*
+     *  Returns total price for items in cart if not empty, else returns 0.
+     */
     public function getTotal($itm_array){
         $total = ($this->getTax($itm_array) + $this->getSubtotal($itm_array));
         return $total;

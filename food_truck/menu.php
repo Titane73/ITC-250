@@ -1,6 +1,6 @@
 <?php
 /*
- * @package SurveySez
+ * @package foodTruck
  * @author Kyrrah Nork <kyrrahnork@gmail.com>
  * @author Nicole Brown <giantspork@gmail.com>
  * @author Ron Hamasaki <shinobu.kinjo@gmail.com>

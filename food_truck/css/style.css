@@ -1,3 +1,16 @@
+/*
+ * @package foodTruck
+ * @author Kyrrah Nork <kyrrahnork@gmail.com>
+ * @author Nicole Brown <giantspork@gmail.com>
+ * @author Ron Hamasaki <shinobu.kinjo@gmail.com>
+ * @version 0.1 2017/07/17
+ * @link http://kyrrahnork.com/sm17
+ * @license http://www.apache.org/licenses/LICENSE-2.0
+ * @see index.php
+ * @see cart.php 
+ * @todo none
+*/
+
 *{
     margin:0;
     padding: 0;
@@ -9,6 +22,13 @@ html{
 
 body{
     margin-top: 0;
+}
+
+#wrapper{
+    width:90%;
+    background-color:#d1d1d1;
+    margin:0 auto;
+    overflow: auto;
 }
 
 .banner{
@@ -36,13 +56,6 @@ header{
     padding: 30px 0;
 }
 
-#wrapper{
-    width:80%;
-    background-color:#d1d1d1;
-    margin:0 auto;
-    overflow: auto;
-}
-
 .menu_item{
     border: 2px solid black;
     margin-bottom: 2em;
@@ -55,6 +68,7 @@ header{
 }
 
 section{
+    width:50%;
     float: left;
     padding: 1em;
 }
@@ -80,6 +94,8 @@ label h3{
 }
 
 aside{
+    position:fixed;
+    margin-left: 50%;
     margin-top: 10px;
 }
 
