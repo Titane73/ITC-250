@@ -1,7 +1,7 @@
 <?php
 
 /*
- * @package SurveySez
+ * @package Dana's Weiner Hut
  * @author Kyrrah Nork <kyrrahnork@gmail.com>
  * @author Nicole Brown <giantspork@gmail.com>
  * @author Ron Hamasaki <shinobu.kinjo@gmail.com>
