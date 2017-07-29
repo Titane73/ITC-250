@@ -10,13 +10,13 @@ DROP TABLE IF EXISTS sm17_news_categories;
   
 #all tables must be of type InnoDB to do transactions, foreign key constraints
 CREATE TABLE sm17_news_categories(
-CategoryID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+NewsCategoryID INT UNSIGNED NOT NULL AUTO_INCREMENT,
 Name VARCHAR(255) DEFAULT '',
 Slug VARCHAR(255) DEFAULT '',
 Description TEXT DEFAULT '',
 DateAdded DATETIME,
 LastUpdated TIMESTAMP DEFAULT 0 ON UPDATE CURRENT_TIMESTAMP,
-PRIMARY KEY (CategoryID)
+PRIMARY KEY (NewsCategoryID)
 )ENGINE=INNODB; 
 
 #create some categories
@@ -27,7 +27,7 @@ INSERT INTO sm17_news_categories VALUES (NULL, 'Culinary Arts', 'culinary-arts',
 #foreign key field must match size and type, hence CategoryID is INT UNSIGNED
 CREATE TABLE sm17_news_feeds(
 FeedID INT UNSIGNED NOT NULL AUTO_INCREMENT,
-CategoryID INT UNSIGNED DEFAULT 0,
+NewsCategoryID INT UNSIGNED DEFAULT 0,
 Name VARCHAR(255) DEFAULT '',
 Slug VARCHAR(255) DEFAULT '',
 Description TEXT DEFAULT '',
@@ -36,8 +36,8 @@ Feed TEXT DEFAULT '',
 DateAdded DATETIME,
 LastUpdated TIMESTAMP DEFAULT 0 ON UPDATE CURRENT_TIMESTAMP,
 PRIMARY KEY (FeedID),
-INDEX CategoryID_index(CategoryID),
-FOREIGN KEY (CategoryID) REFERENCES news_categories(CategoryID) ON DELETE CASCADE
+INDEX NewsCategoryID_index(NewsCategoryID),
+FOREIGN KEY (NewsCategoryID) REFERENCES news_categories(NewsCategoryID) ON DELETE CASCADE
 )ENGINE=INNODB;
 
 INSERT INTO sm17_news_feeds VALUES (NULL,1,'Weaving','weaving','Description of Weaving feeds', 'textile weaving', 'https://news.google.com/news/rss/search/section/q/textile%20weaving/textile%20weaving?hl=en&ned=us', NOW(), NOW());
