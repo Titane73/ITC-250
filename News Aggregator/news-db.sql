@@ -1,5 +1,5 @@
 /*
-  newsdb.sql - updated 7/27/2017
+  news-db.sql - updated 7/27/2017
 */
 
 SET foreign_key_checks = 0; #turn off constraints temporarily
