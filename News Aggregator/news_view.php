@@ -40,9 +40,10 @@ if($myFeed->IsValid)
     echo '
     <h3 align="center"> Category: <i><b>' . $myFeed->CategoryName .
         '</b></i>, RSS Feed: <i><b>' . $myFeed->Name . '</b></i></h3>
+        <p align="center">' . $myFeed->Description . '</p>
     ';
 
-    //our simplest example of consuming an RSS feed
+    //TODO Handle Session caching of the feed results for a set time period, like 10 minutes
 
     $response = file_get_contents($myFeed->Feed);
     $xml = simplexml_load_string($response);
@@ -66,19 +67,31 @@ class Feed
     public $NewsCategoryID = 0;
     public $CategoryName = '';
     public $Name= '';
+    public $Description= '';
     public $Feed = '';
+    public $DateAdded = '';
+    public $LastUpdated = '';
     public $IsValid = false;
     
     public function __construct($id)
     {
         $id = (int)$id;//cast to integer disallows SQL injection
-        $sql = "SELECT
-                    FeedID,
-                    NewsCategoryID,
-                    Name,
-                    Feed
-                FROM " . PREFIX . "news_feeds where FeedID = " . $id;
 
+        $sql = 
+        "
+            SELECT
+                nf.FeedID,
+                nf.NewsCategoryID,
+                nc.Name 'CategoryName',
+                nf.Name,
+                nf.Description,
+                nf.Feed,
+                date_format(nf.DateAdded, '%W %D %M %Y %H:%i') 'DateAdded',
+                date_format(nf.LastUpdated, '%W %D %M %Y %H:%i') 'LastUpdated' 
+            FROM " . PREFIX . "news_feeds nf 
+            INNER JOIN " . PREFIX . "news_categories nc ON nf.NewsCategoryID = nc.NewsCategoryID 
+            WHERE nf.FeedID = " . $id;
+        
         $result = mysqli_query(IDB::conn(),$sql) or die(trigger_error(mysqli_error(IDB::conn()), E_USER_ERROR));
 
         if(mysqli_num_rows($result) > 0)
@@ -88,29 +101,15 @@ class Feed
             {
                 $this->FeedID = $id;
                 $this->NewsCategoryID = dbOut($row['NewsCategoryID']);
+                $this->CategoryName = dbOut($row['CategoryName']);
                 $this->Name = dbOut($row['Name']);
+                $this->Description = dbOut($row['Description']);
                 $this->Feed = dbOut($row['Feed']);
+                $this->DateAdded = dbOut($row['DateAdded']);
+                $this->LastUpdated = dbOut($row['LastUpdated']);
             }
         }
 
-        @mysqli_free_result($result); # We're done with the data!
-
-        //---look up category name
-        $sql = "SELECT
-                    Name
-                FROM " . PREFIX . "news_categories
-                WHERE NewsCategoryID = " . $this->NewsCategoryID;
-        
-        $result = mysqli_query(IDB::conn(),$sql) or die(trigger_error(mysqli_error(IDB::conn()), E_USER_ERROR));
-
-        if(mysqli_num_rows($result) > 0)
-        {#records exist - process
-            while ($row = mysqli_fetch_assoc($result))
-            {
-                $this->CategoryName= dbOut($row['Name']); 
-            }
-        }
-        
         @mysqli_free_result($result); # We're done with the data!
 
     }// END class Feed Constructor

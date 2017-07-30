@@ -78,7 +78,7 @@ $result = mysqli_query(IDB::conn(),$sql) or die(trigger_error(mysqli_error(IDB::
 # dumpDie(mysqli_fetch_assoc($result));
 if(mysqli_num_rows($result) > 0)
 {#records exist - process
-	if($myPager->showTotal()==1){$itemz = "news feed";}else{$itemz = "news feeds";}  deal with plural
+	if($myPager->showTotal()==1){$itemz = "news feed";}else{$itemz = "news feeds";} # deal with plural
     echo '<div align="center"><h4>We have ' . $myPager->showTotal() . ' ' . $itemz . '!</h4></div>';
     echo '
     <table class="table table-striped table-hover ">
