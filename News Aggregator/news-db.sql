@@ -37,7 +37,7 @@ DateAdded DATETIME,
 LastUpdated TIMESTAMP DEFAULT 0 ON UPDATE CURRENT_TIMESTAMP,
 PRIMARY KEY (FeedID),
 INDEX NewsCategoryID_index(NewsCategoryID),
-FOREIGN KEY (NewsCategoryID) REFERENCES news_categories(NewsCategoryID) ON DELETE CASCADE
+FOREIGN KEY (NewsCategoryID) REFERENCES sm17_news_categories(NewsCategoryID) ON DELETE CASCADE
 )ENGINE=INNODB;
 
 INSERT INTO sm17_news_feeds VALUES (NULL,1,'Weaving','weaving','Description of Weaving feeds', 'textile weaving', 'https://news.google.com/news/rss/search/section/q/textile%20weaving/textile%20weaving?hl=en&ned=us', NOW(), NOW());
