@@ -15,6 +15,7 @@
  * @todo NTH Add Feeds
  * @todo NTH Update Feeds
  */
+session_start();
 
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials
  
@@ -36,17 +37,17 @@ if($myFeed->IsValid)
 get_header(); #defaults to theme header or header_inc.php
 
 if($myFeed->IsValid)
-{#records exist - show Feed 
+{#records exist - show Feed
+    // $xml will contain the entire RSS Feed object for this feed
+    $xml = $myFeed->getRSS();
+
     echo '
     <h3 align="center"> Category: <i><b>' . $myFeed->CategoryName .
         '</b></i>, RSS Feed: <i><b>' . $myFeed->Name . '</b></i></h3>
         <p align="center">' . $myFeed->Description . '</p>
+        <p align="center">' . $myFeed->timeStamp() . '</p>
     ';
-
-    //TODO Handle Session caching of the feed results for a set time period, like 10 minutes
-
-    $response = file_get_contents($myFeed->Feed);
-    $xml = simplexml_load_string($response);
+    
     print '<h1>' . $xml->channel->title . '</h1>';
 
     foreach($xml->channel->item as $story) {
@@ -77,8 +78,7 @@ class Feed
     {
         $id = (int)$id;//cast to integer disallows SQL injection
 
-        $sql = 
-        "
+        $sql = "
             SELECT
                 nf.FeedID,
                 nf.NewsCategoryID,
@@ -113,6 +113,52 @@ class Feed
         @mysqli_free_result($result); # We're done with the data!
 
     }// END class Feed Constructor
+    
+    // function getRSS - return RSS Feed object from cache in Session var
+    public function getRSS()
+    {
+        //if ( (!isset($_SESSION['Feed'.$this->FeedID])) or $this->stale() ) {
+        if ( !isset($_SESSION['Feed' . $this->FeedID]) || $this->stale() ) {
+            // create unique session variable containing Feed object
+            $response = file_get_contents($this->Feed);
+            $_SESSION['Feed' . $this->FeedID] = $response;
+            // set/reset unique session variable
+            $_SESSION['FeedTime' . $this->FeedID] = getdate()['0'];
+        }else{
+            $response = $_SESSION['Feed' . $this->FeedID];    
+        }
+        
+        // return Feed object from the session variable
+        $rssObject = simplexml_load_string($response);
+        return $rssObject;
+    }
+    
+    // function timeStamp - return timestamp of latest cache data 
+    public function timeStamp()
+    {
+        return $_SESSION['FeedTime'.$this->FeedID];        
+    }
+    
+    // function stale - has Cached Feed object expired?
+    private function stale()
+    {
+        define ('CACHE_TIMEOUT', 600); // in seconds, 600 = 10 minutes
+        
+        if ( isset($_SESSION['FeedTime' . $this->FeedID]) ) {        
+        
+            $expires = $_SESSION['FeedTime' . $this->FeedID] + CACHE_TIMEOUT;
+
+            if ( $expires < getdate()['0'] ) {
+                $expired = true;
+            }else{
+                $expired = false;
+            }
+        }else{
+            $expired = true;            
+        }
+        
+        return $expired;    
+    }
     
 } // END class Feed
 
