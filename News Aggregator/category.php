@@ -17,6 +17,7 @@ class Category
 {
     public $NewsCategoryID = 0;
     public $Name= '';
+    public $Slug= '';
     public $Description= '';
     public $DateAdded = '';
     public $LastUpdated = '';
@@ -31,6 +32,7 @@ class Category
             SELECT
                 NewsCategoryID,
                 Name,
+                Slug,
                 Description,
                 date_format(DateAdded, '%W %D %M %Y %H:%i') 'DateAdded',
                 date_format(LastUpdated, '%W %D %M %Y %H:%i') 'LastUpdated' 
@@ -46,6 +48,7 @@ class Category
             {
                 $this->NewsCategoryID = $id;
                 $this->Name = dbOut($row['Name']);
+                $this->Slug = dbOut($row['Slug']);
                 $this->Description = dbOut($row['Description']);
                 $this->DateAdded = dbOut($row['DateAdded']);
                 $this->LastUpdated = dbOut($row['LastUpdated']);

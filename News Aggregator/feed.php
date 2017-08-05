@@ -16,6 +16,7 @@ class Feed
 {
     public $FeedID = 0;
     public $Name= '';
+    public $Slug= '';
     public $Description= '';
     public $Feed = '';
     public $DateAdded = '';
@@ -30,6 +31,7 @@ class Feed
             SELECT
                 FeedID,
                 Name,
+                Slug,
                 Description,
                 Feed,
                 date_format(DateAdded, '%W %D %M %Y %H:%i') 'DateAdded',
@@ -46,6 +48,7 @@ class Feed
             {
                 $this->FeedID = $id;
                 $this->Name = dbOut($row['Name']);
+                $this->Slug = dbOut($row['Slug']);
                 $this->Description = dbOut($row['Description']);
                 $this->Feed = dbOut($row['Feed']);
                 $this->DateAdded = dbOut($row['DateAdded']);
