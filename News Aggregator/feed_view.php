@@ -15,7 +15,30 @@
  * @todo NTH Add Feeds
  * @todo NTH Update Feeds
  */
-session_start();
+
+$time = $_SERVER[‘REQUEST_TIME’];
+
+/**
+ * for a 30 minute timeout, specified in seconds
+ */
+$timeout_duration = 600;
+
+/**
+ * Here we look for the user’s LAST_ACTIVITY timestamp. If
+ * it’s set and indicates our $timeout_duration has passed,
+ * blow away any previous $_SESSION data and start a new one.
+ */
+if (isset($_SESSION[‘LAST_ACTIVITY’]) && ($time-$_SESSION[‘LAST_ACTIVITY’]) > $timeout_duration) {
+  session_unset();    
+  session_destroy();
+  session_start();    
+}
+   
+/**
+ * Finally, update LAST_ACTIVITY so that our timeout
+ * is based on it and not the user’s login time.
+ */
+$_SESSION[‘LAST_ACTIVITY’] = $time;
 
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials
  
@@ -117,16 +140,25 @@ class Feed
     // function getRSS - return RSS Feed object from cache in Session var
     public function getRSS()
     {
-        //if ( (!isset($_SESSION['Feed'.$this->FeedID])) or $this->stale() ) {
-        if ( !isset($_SESSION['Feed' . $this->FeedID]) || $this->stale() ) {
+        if ( !isset($_SESSION['Feed' . $this->FeedID])) {
+        
+            //set a cookie
+            //setcookie("myCookie", $_SESSION['Feed' . $this->FeedID], time() + 600);
+            
             // create unique session variable containing Feed object
             $response = file_get_contents($this->Feed);
             $_SESSION['Feed' . $this->FeedID] = $response;
             // set/reset unique session variable
             $_SESSION['FeedTime' . $this->FeedID] = getdate()['0'];
         }else{
-            $response = $_SESSION['Feed' . $this->FeedID];    
+            $response = $_SESSION['Feed' . $this->FeedID];  
+            //setcookie("myCookie", $_SESSION['Feed' . $this->FeedID], time() + 600);
         }
+        
+        //if()
+        //{
+            
+        //}
         
         // return Feed object from the session variable
         $rssObject = simplexml_load_string($response);
@@ -136,9 +168,18 @@ class Feed
     // function timeStamp - return timestamp of latest cache data 
     public function timeStamp()
     {
-        return $_SESSION['FeedTime'.$this->FeedID];        
+        $date = new DateTime();
+        $date->setTimestamp($_SESSION['FeedTime'.$this->FeedID]);
+        return $date->format('Y-m-d H:i:s') . "\n";
     }
+/*    
     
+    public function unsetCookie()
+    {
+        setcookie("myCookie",$_SESSION['Feed' . $this->FeedID],time()-1);
+    }
+*/    
+/*    
     // function stale - has Cached Feed object expired?
     private function stale()
     {
@@ -159,6 +200,7 @@ class Feed
         
         return $expired;    
     }
+*/    
     
 } // END class Feed
 
