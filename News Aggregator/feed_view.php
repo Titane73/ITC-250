@@ -16,30 +16,7 @@
  * @todo NTH Update Feeds
  */
 
-$time = $_SERVER[‘REQUEST_TIME’];
-
-/**
- * for a 30 minute timeout, specified in seconds
- */
-$timeout_duration = 600;
-
-/**
- * Here we look for the user’s LAST_ACTIVITY timestamp. If
- * it’s set and indicates our $timeout_duration has passed,
- * blow away any previous $_SESSION data and start a new one.
- */
-if (isset($_SESSION[‘LAST_ACTIVITY’]) && ($time-$_SESSION[‘LAST_ACTIVITY’]) > $timeout_duration) {
-  session_unset();    
-  session_destroy();
-  session_start();    
-}
-   
-/**
- * Finally, update LAST_ACTIVITY so that our timeout
- * is based on it and not the user’s login time.
- */
-$_SESSION[‘LAST_ACTIVITY’] = $time;
-
+session_start();
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials
  
 # check variable of item passed in - if invalid data, forcibly redirect back to index.php page
@@ -68,7 +45,7 @@ if($myFeed->IsValid)
     <h3 align="center"> Category: <i><b>' . $myFeed->CategoryName .
         '</b></i>, RSS Feed: <i><b>' . $myFeed->Name . '</b></i></h3>
         <p align="center">' . $myFeed->Description . '</p>
-        <p align="center">' . $myFeed->timeStamp() . '</p>
+        <p align="center">' . 'Feed retrieved at: ' . $myFeed->timeStamp() . '</p>
     ';
     
     print '<h1>' . $xml->channel->title . '</h1>';
@@ -142,9 +119,6 @@ class Feed
     {
         if ( !isset($_SESSION['Feed' . $this->FeedID])) {
         
-            //set a cookie
-            //setcookie("myCookie", $_SESSION['Feed' . $this->FeedID], time() + 600);
-            
             // create unique session variable containing Feed object
             $response = file_get_contents($this->Feed);
             $_SESSION['Feed' . $this->FeedID] = $response;
@@ -154,12 +128,7 @@ class Feed
             $response = $_SESSION['Feed' . $this->FeedID];  
             //setcookie("myCookie", $_SESSION['Feed' . $this->FeedID], time() + 600);
         }
-        
-        //if()
-        //{
             
-        //}
-        
         // return Feed object from the session variable
         $rssObject = simplexml_load_string($response);
         return $rssObject;
@@ -172,14 +141,7 @@ class Feed
         $date->setTimestamp($_SESSION['FeedTime'.$this->FeedID]);
         return $date->format('Y-m-d H:i:s') . "\n";
     }
-/*    
-    
-    public function unsetCookie()
-    {
-        setcookie("myCookie",$_SESSION['Feed' . $this->FeedID],time()-1);
-    }
-*/    
-/*    
+ 
     // function stale - has Cached Feed object expired?
     private function stale()
     {
@@ -200,7 +162,7 @@ class Feed
         
         return $expired;    
     }
-*/    
+   
     
 } // END class Feed
 
