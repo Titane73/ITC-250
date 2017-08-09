@@ -20,7 +20,7 @@ PRIMARY KEY (NewsCategoryID)
 )ENGINE=INNODB; 
 
 #create some categories
-INSERT INTO sm17_news_categories VALUES (NULL, 'Textile Crafts', 'textile-crafts', 'Weaving, Sewing, and Leather', NOW(), NOW()); 
+INSERT INTO sm17_news_categories VALUES (NULL, 'Textile Crafts', 'textile-crafts', 'Weaving, Sewing, Leather', NOW(), NOW()); 
 INSERT INTO sm17_news_categories VALUES (NULL, 'Gardening', 'gardening', 'Flowers, Vegetables, and Landscaping', NOW(), NOW()); 
 INSERT INTO sm17_news_categories VALUES (NULL, 'Culinary Arts', 'culinary-arts', 'Baking, Brewing, Grilling: We've got it all!', NOW(), NOW()); 
 
