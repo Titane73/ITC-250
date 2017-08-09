@@ -19,7 +19,6 @@ session_start();
 
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials
 require 'category.php';
-
 # check variable of item passed in - if invalid data, forcibly redirect back to index.php page
 if(isset($_GET['id']) && (int)$_GET['id'] > 0){#proper data must be on querystring
 	 $CategoryID = (int)$_GET['id']; #Convert to integer, will equate to zero if fails

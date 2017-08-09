@@ -16,9 +16,34 @@
  * @todo NTH Update Feeds
  */
 
-session_start();
+$time = $_SERVER[‘REQUEST_TIME’];
+
+/**
+ * for a 30 minute timeout, specified in seconds
+ */
+$timeout_duration = 600;
+
+/**
+ * Here we look for the user’s LAST_ACTIVITY timestamp. If
+ * it’s set and indicates our $timeout_duration has passed,
+ * blow away any previous $_SESSION data and start a new one.
+ */
+if (isset($_SESSION[‘LAST_ACTIVITY’]) && ($time-$_SESSION[‘LAST_ACTIVITY’]) > $timeout_duration) {
+  session_unset();    
+  session_destroy();
+  session_start();    
+}
+   
+/**
+ * Finally, update LAST_ACTIVITY so that our timeout
+ * is based on it and not the user’s login time.
+ */
+$_SESSION[‘LAST_ACTIVITY’] = $time;
+
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials
- 
+require '../inc_0700/Pager_inc.php';
+echo '<link href="' . VIRTUAL_PATH  . 'include/newsFeed.css" rel="stylesheet" type="text/css" />';
+
 # check variable of item passed in - if invalid data, forcibly redirect back to index.php page
 if(isset($_GET['id']) && (int)$_GET['id'] > 0){#proper data must be on querystring
 	 $feedID = (int)$_GET['id']; #Convert to integer, will equate to zero if fails
@@ -41,24 +66,38 @@ if($myFeed->IsValid)
     // $xml will contain the entire RSS Feed object for this feed
     $xml = $myFeed->getRSS();
 
-    echo '
+    echo '<div class="fragment">
     <h3 align="center"> Category: <i><b>' . $myFeed->CategoryName .
         '</b></i>, RSS Feed: <i><b>' . $myFeed->Name . '</b></i></h3>
         <p align="center">' . $myFeed->Description . '</p>
-        <p align="center">' . 'Feed retrieved at: ' . $myFeed->timeStamp() . '</p>
+        <p align="center">' . 'Feed loaded at: ' . $myFeed->timeStamp() . '</p></div>
     ';
     
-    print '<h1>' . $xml->channel->title . '</h1>';
+    print '<h1 class="feedTitle">' . $xml->channel->title . '</h1>';
 
     foreach($xml->channel->item as $story) {
         //echo '<a href="' . $story->link . '">' . $story->title . '</a><br />'; 
-        echo '<p>' . $story->description . '</p><br /><br />';
+        echo '<div class="fragment">
+        <p>' . $story->description . '</p>
+        <p>' . $story->pubDate . '</p>
+        </div><br /><br />';
     }
 }else{//no such Feed!
     echo '<div align="center">ERROR: No such Feed for ID=' . $feedID . '</div>';
 }
 
+
+//$prev = '<img src="' . VIRTUAL_PATH . 'arrow_prev.gif" border="0" />';
+//$next = '<img src="' . VIRTUAL_PATH . 'arrow_next.gif" border="0" />';
+
+# Create instance of new 'pager' class
+//$myPager = new Pager(5,'',$prev,$next,'');
+
 echo '<div align="center"><a href="' . VIRTUAL_PATH . 'news/index.php">Back</a></div>';
+
+
+
+
 
 get_footer(); #defaults to theme footer or footer_inc.php
 
@@ -119,6 +158,9 @@ class Feed
     {
         if ( !isset($_SESSION['Feed' . $this->FeedID])) {
         
+            //set a cookie
+            //setcookie("myCookie", $_SESSION['Feed' . $this->FeedID], time() + 600);
+            
             // create unique session variable containing Feed object
             $response = file_get_contents($this->Feed);
             $_SESSION['Feed' . $this->FeedID] = $response;
@@ -128,7 +170,12 @@ class Feed
             $response = $_SESSION['Feed' . $this->FeedID];  
             //setcookie("myCookie", $_SESSION['Feed' . $this->FeedID], time() + 600);
         }
+        
+        //if()
+        //{
             
+        //}
+        
         // return Feed object from the session variable
         $rssObject = simplexml_load_string($response);
         return $rssObject;
@@ -141,7 +188,14 @@ class Feed
         $date->setTimestamp($_SESSION['FeedTime'.$this->FeedID]);
         return $date->format('Y-m-d H:i:s') . "\n";
     }
- 
+/*    
+    
+    public function unsetCookie()
+    {
+        setcookie("myCookie",$_SESSION['Feed' . $this->FeedID],time()-1);
+    }
+*/    
+/*    
     // function stale - has Cached Feed object expired?
     private function stale()
     {
@@ -162,7 +216,7 @@ class Feed
         
         return $expired;    
     }
-   
+*/    
     
 } // END class Feed
 
