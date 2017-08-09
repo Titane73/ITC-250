@@ -107,7 +107,7 @@ function addForm($CatId)
 	get_header();
 	echo '<h3 align="center">' . smartTitle() . '</h3>
 	<h4 align="center">Add RSS Feed to Category <strong><em>' . $myCategory->Name . '</em></strong></h4>
-	<form action="feed_add.php" method="post">
+	<form action="feed_list.php" method="post">
 	<table align="center">
        <tr><td align="right">RSS Feed Name</td>
 		   	<td>
