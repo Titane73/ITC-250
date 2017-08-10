@@ -1,6 +1,6 @@
 <?php
 /**
- * @package newsfeeds
+ * @package NewsViews
  * @author Anu Slorah
  * @author Kyrrah Nork
  * @author Ron Nims <rleenims@gmail.com>
@@ -25,6 +25,12 @@ switch ($myAction)
 	 	break;
 	case "insert": //3) Insert new category
 		insertExecute();
+		break;
+	case "edit": //2) Form for editing existing category
+	 	editDisplay();
+	 	break;
+	case "update": //3) Update edited category
+		updateExecute();
 		break; 
 	default: //1)Show existing categories
 	 	showCategories();
@@ -53,12 +59,13 @@ function showCategories()
 	{//show results
 		echo '
             <table class="table table-striped table-hover ">
-            <thead>
-            <tr>
-              <th>Category</th>
-              <th>Category Description</th>
-            </tr>
-            </thead>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Category Description</th>
+                        <th>Edit Category</th>
+                    </tr>
+                </thead>
             <tbody>
 			';
 		while ($row = mysqli_fetch_assoc($result))
@@ -66,6 +73,7 @@ function showCategories()
 			echo '<tr>
 					<td><a href="' . VIRTUAL_PATH . 'news/feed_list.php?id=' . (int)$row['NewsCategoryID'] . '">' . dbOut($row['Name']) . '</a></td>
                     <td>' . dbOut($row['Description']) . '</td>
+                    <td><a href="' . VIRTUAL_PATH . 'news/index.php?id=' . (int)$row['NewsCategoryID'] . '&act=edit">EDIT</a></td>
                 </tr>
 				';
 		}
@@ -79,11 +87,11 @@ function showCategories()
 }
 
 function addForm()
-{# shows details from a single customer, and preloads their first name in a form.
+{#
 	global $config;
 	
 	get_header();
-	echo '<h3 align="center">' . smartTitle() . '</h3>
+	echo '<h3 align="center">News Categories</h3>
 	<h4 align="center">Add Category</h4>
 	<form action="' . THIS_PAGE . '" method="post" onsubmit="return checkForm(this);">
 	<table align="center">
@@ -152,3 +160,129 @@ function insertExecute()
 	myRedirect(THIS_PAGE);
 }
 
+function editDisplay()
+{# shows details from a single category, and allows editing
+	global $config;
+	if(!is_numeric($_GET['id']))
+	{	
+		feedback("id passed was not a number. (error code #" . createErrorCode(THIS_PAGE,__LINE__) . ")","error");
+		myRedirect(THIS_PAGE);
+	}
+
+	$myID = (int)$_GET['id'];  //forcibly convert to integer
+
+    $sql = "
+    SELECT
+        NewsCategoryID,
+        Name,
+        Slug,
+        Description,
+        date_format(DateAdded, '%W %D %M %Y %H:%i') 'DateAdded',
+        date_format(LastUpdated, '%W %D %M %Y %H:%i') 'LastUpdated' 
+    FROM " . PREFIX . "news_categories
+    WHERE NewsCategoryID=" . $myID
+    ;
+
+	$result = mysqli_query(IDB::conn(),$sql) or die(trigger_error(mysqli_error(IDB::conn()), E_USER_ERROR));
+	if(mysqli_num_rows($result) > 0)//at least one record!
+	{//show results
+		while ($row = mysqli_fetch_array($result))
+		{//dbOut() function is a 'wrapper' designed to strip slashes, etc. of data leaving db
+		     $Name = dbOut($row['Name']);
+		     $Description = dbOut($row['Description']);
+		}
+	}else{//no records
+      //feedback issue to user/developer
+      feedback("No such category. (error code #" . createErrorCode(THIS_PAGE,__LINE__) . ")","error");
+	  myRedirect(THIS_PAGE);
+	}
+
+	get_header();
+	echo '<h3 align="center">News Categories</h3>
+	<h4 align="center">Update Category <em>' . $Name . '</em></h4>
+    
+	<form action="' . THIS_PAGE . '" method="post" onsubmit="return checkForm(this);">
+	<table align="center">
+	   <tr><td align="right">Category Name</td>
+		   	<td>
+		   		<input type="text" name="CategoryName" value="' .  $Name . '"/>
+		   		<font color="red"><b>*</b></font> <em>(alphanumerics & spaces)</em>
+		   	</td>
+	   </tr>
+	   <tr><td align="right">Category Description</td>
+		   	<td>
+		   		<input type="text" name="CategoryDescription" size="56" value="' .  $Description . '"/>
+		   	</td>
+	   </tr>
+	   <input type="hidden" name="act" value="update" />
+	   <input type="hidden" name="id" value="' .  $myID . '" />
+	   <tr>
+	   		<td align="center" colspan="2">
+	   			<input type="submit" value="Update This Category">
+	   		</td>
+	   </tr>
+	</table>    
+	</form>
+	<div align="center"><a href="' . THIS_PAGE . '">Exit Without Update</a></div>
+	';
+
+	@mysqli_free_result($result); //free resources
+	get_footer();
+	
+}
+
+function updateExecute()
+{
+	if(!is_numeric($_POST['id']))
+	{//data must be alphanumeric only	
+		feedback("id passed was not a number. (error code #" . createErrorCode(THIS_PAGE,__LINE__) . ")","error");
+		myRedirect(THIS_PAGE);
+	}
+
+	$iConn = IDB::conn();//must have DB as variable to pass to mysqli_real_escape() via iformReq()
+	
+	$redirect = THIS_PAGE; //global var used for following formReq redirection on failure
+
+	$myID = (int)$_POST['id'];  //forcibly convert to integer
+
+	$Name = strip_tags(iformReq('CategoryName',$iConn));
+    $Name = preg_replace("/(?![.,=$'€%-])\p{P}/u", "", $Name);
+	$Description = strip_tags(iformReq('CategoryDescription',$iConn));
+
+	//next check for specific issues with data
+	if(!ctype_print($Name))
+	{//data must be alphanumeric or punctuation only	
+		feedback("Category Name must only contain letters, numbers or spaces","warning");
+		myRedirect(THIS_PAGE);
+	}
+
+    //$CategorySlug = $CategoryName;
+    $SlugArray = explode(" ", strtolower($Name));
+    $Slug = implode("-", $SlugArray);
+    
+
+    //build string for SQL insert with replacement vars, %s for string, %d for digits 
+
+    $sql = "
+    UPDATE " . PREFIX . "news_categories set
+        Name='%s',
+        Slug='%s',
+        Description='%s',
+        LastUpdated=NOW() 
+    WHERE NewsCategoryID=" . $myID
+    ;    
+     
+    # sprintf() allows us to filter (parameterize) form data 
+	$sql = sprintf($sql,$Name,$Slug,$Description);
+
+	@mysqli_query($iConn,$sql) or die(trigger_error(mysqli_error($iConn), E_USER_ERROR));
+	#feedback success or failure of update
+	if (mysqli_affected_rows($iConn) > 0)
+	{//success!  provide feedback, chance to change another!
+	 feedback("Category Updated Successfully!","success");
+	 
+	}else{//Problem!  Provide feedback!
+	 feedback("Category NOT changed!","warning");
+	}
+	myRedirect(THIS_PAGE);
+}

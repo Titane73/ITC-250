@@ -18,6 +18,7 @@ class Feed
     public $Name= '';
     public $Slug= '';
     public $Description= '';
+    public $Search = '';
     public $Feed = '';
     public $DateAdded = '';
     public $LastUpdated = '';
@@ -33,6 +34,7 @@ class Feed
                 Name,
                 Slug,
                 Description,
+                Search,
                 Feed,
                 date_format(DateAdded, '%W %D %M %Y %H:%i') 'DateAdded',
                 date_format(LastUpdated, '%W %D %M %Y %H:%i') 'LastUpdated' 
@@ -50,6 +52,7 @@ class Feed
                 $this->Name = dbOut($row['Name']);
                 $this->Slug = dbOut($row['Slug']);
                 $this->Description = dbOut($row['Description']);
+                $this->Search = dbOut($row['Search']);
                 $this->Feed = dbOut($row['Feed']);
                 $this->DateAdded = dbOut($row['DateAdded']);
                 $this->LastUpdated = dbOut($row['LastUpdated']);
