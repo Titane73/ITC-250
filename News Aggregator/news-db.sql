@@ -22,7 +22,7 @@ PRIMARY KEY (NewsCategoryID)
 #create some categories
 INSERT INTO sm17_news_categories VALUES (NULL, 'Textile Crafts', 'textile-crafts', 'Weaving, Sewing, Leather', NOW(), NOW()); 
 INSERT INTO sm17_news_categories VALUES (NULL, 'Gardening', 'gardening', 'Flowers, Vegetables, and Landscaping', NOW(), NOW()); 
-INSERT INTO sm17_news_categories VALUES (NULL, 'Culinary Arts', 'culinary-arts', 'Baking, Brewing, Grilling: We've got it all!', NOW(), NOW()); 
+INSERT INTO sm17_news_categories VALUES (NULL, 'Culinary Arts', 'culinary-arts', 'Baking, Brewing, Grilling: We have got it all!', NOW(), NOW()); 
 
 #foreign key field must match size and type, hence CategoryID is INT UNSIGNED
 CREATE TABLE sm17_news_feeds(
