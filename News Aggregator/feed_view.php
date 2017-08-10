@@ -95,6 +95,7 @@ if($myFeed->IsValid)
     $xml = $myFeed->getRSS();
 
     echo '<div class="fragment">
+    <h3 align="center">RSS News Feed Portal</h3>
     <h3 align="center"> Category: <i><b>' . $categoryName .
         '</b></i>, RSS Feed: <i><b>' . $myFeed->Name . '</b></i></h3>
         <p align="center">' . $myFeed->Description . '</p>

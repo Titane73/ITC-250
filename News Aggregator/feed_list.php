@@ -60,6 +60,7 @@ function showFeeds($CatId)
     {#records exist - show Feed 
 
         echo '
+        <h3 align="center">RSS News Feed Portal</h3>
         <h3 align="center"> Category: <i><b>' . $myCategory->Name .
             '</b></i></h3>
             <p align="center">' . $myCategory->Description . '</p>
