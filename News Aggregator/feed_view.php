@@ -39,9 +39,10 @@ if (isset($_SESSION[‘LAST_ACTIVITY’]) && ($time-$_SESSION[‘LAST_ACTIVITY�
  * is based on it and not the user’s login time.
 $_SESSION[‘LAST_ACTIVITY’] = $time;
  */
+
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials
 require '../inc_0700/Pager_inc.php';
-
+require 'category.php';
 
 echo '<link href="' . VIRTUAL_PATH  . 'include/newsFeed.css" rel="stylesheet" type="text/css" />';
 
@@ -62,14 +63,22 @@ if(isset($_GET['act'])) {
     {//check 'act' for type of process
         case "clear": // Cear feed cache
             //TODO $myFeed->clearFeedCache() is not working
+            $myFeed->clearFeedCache();
             //so clearing feed cach directly
-            if ( isset($_SESSION['Feed' . $feedID]) ) {        
-                unset($_SESSION['Feed' . $feedID]);
-                unset($_SESSION['FeedTime' . $feedID]);
-            }
+            //if ( isset($_SESSION['Feed' . $feedID]) ) {        
+            //    unset($_SESSION['Feed' . $feedID]);
+            //    unset($_SESSION['FeedTime' . $feedID]);
+            //}
 
             myRedirect(THIS_PAGE . "?id=" . $feedID);
     }
+}
+if(isset($_GET['catid'])) {
+	$categoryID = (int)$_GET['catid'];
+    $myCategory = new Category($categoryID);
+    $categoryName = $myCategory->Name;
+}else{
+    $categoryName = 'News';
 }
 
 if($myFeed->IsValid)
@@ -86,7 +95,7 @@ if($myFeed->IsValid)
     $xml = $myFeed->getRSS();
 
     echo '<div class="fragment">
-    <h3 align="center"> Category: <i><b>' . $myFeed->CategoryName .
+    <h3 align="center"> Category: <i><b>' . $categoryName .
         '</b></i>, RSS Feed: <i><b>' . $myFeed->Name . '</b></i></h3>
         <p align="center">' . $myFeed->Description . '</p>
         <p align="center">' . 'Feed loaded at: ' . $myFeed->timeStamp() . '
@@ -118,122 +127,5 @@ echo '<div align="center"><a href="' . VIRTUAL_PATH . 'news/index.php">Back</a><
 
 get_footer(); #defaults to theme footer or footer_inc.php
 
-class Feed
-{
-    public $FeedID = 0;
-    public $NewsCategoryID = 0;
-    public $CategoryName = '';
-    public $Name= '';
-    public $Description= '';
-    public $Feed = '';
-    public $DateAdded = '';
-    public $LastUpdated = '';
-    public $IsValid = false;
-    
-    public function __construct($id)
-    {
-        $id = (int)$id;//cast to integer disallows SQL injection
 
-        $sql = "
-            SELECT
-                nf.FeedID,
-                nf.NewsCategoryID,
-                nc.Name 'CategoryName',
-                nf.Name,
-                nf.Description,
-                nf.Feed,
-                date_format(nf.DateAdded, '%W %D %M %Y %H:%i') 'DateAdded',
-                date_format(nf.LastUpdated, '%W %D %M %Y %H:%i') 'LastUpdated' 
-            FROM " . PREFIX . "news_feeds nf 
-            INNER JOIN " . PREFIX . "news_categories nc ON nf.NewsCategoryID = nc.NewsCategoryID 
-            WHERE nf.FeedID = " . $id;
-        
-        $result = mysqli_query(IDB::conn(),$sql) or die(trigger_error(mysqli_error(IDB::conn()), E_USER_ERROR));
-
-        if(mysqli_num_rows($result) > 0)
-        {#records exist - process
-            $this->IsValid = true;//record found!
-            while ($row = mysqli_fetch_assoc($result))
-            {
-                $this->FeedID = $id;
-                $this->NewsCategoryID = dbOut($row['NewsCategoryID']);
-                $this->CategoryName = dbOut($row['CategoryName']);
-                $this->Name = dbOut($row['Name']);
-                $this->Description = dbOut($row['Description']);
-                $this->Feed = dbOut($row['Feed']);
-                $this->DateAdded = dbOut($row['DateAdded']);
-                $this->LastUpdated = dbOut($row['LastUpdated']);
-            }
-        }
-
-        @mysqli_free_result($result); # We're done with the data!
-
-    }// END class Feed Constructor
-    
-    // function getRSS - return RSS Feed object from cache in Session var
-    public function getRSS()
-    {
-        if ( !isset($_SESSION['Feed' . $this->FeedID])) {
-        
-            //set a cookie
-            //setcookie("myCookie", $_SESSION['Feed' . $this->FeedID], time() + 600);
-            
-            // create unique session variable containing Feed object
-            $response = file_get_contents($this->Feed);
-            $_SESSION['Feed' . $this->FeedID] = $response;
-            // set/reset unique session variable
-            $_SESSION['FeedTime' . $this->FeedID] = getdate()['0'];
-        }else{
-            $response = $_SESSION['Feed' . $this->FeedID];  
-            //setcookie("myCookie", $_SESSION['Feed' . $this->FeedID], time() + 600);
-        }
-        
-        //if()
-        //{
-            
-        //}
-        
-        // return Feed object from the session variable
-        $rssObject = simplexml_load_string($response);
-        return $rssObject;
-    }
-    
-    // function timeStamp - return timestamp of latest cache data 
-    public function timeStamp()
-    {
-        $date = new DateTime();
-        $date->setTimestamp($_SESSION['FeedTime'.$this->FeedID]);
-        return $date->format('Y-m-d H:i:s') . "\n";
-    }
-/*    
-    
-    public function unsetCookie()
-    {
-        setcookie("myCookie",$_SESSION['Feed' . $this->FeedID],time()-1);
-    }
-*/    
-/*    
-    // function stale - has Cached Feed object expired?
-    private function stale()
-    {
-        define ('CACHE_TIMEOUT', 600); // in seconds, 600 = 10 minutes
-        
-        if ( isset($_SESSION['FeedTime' . $this->FeedID]) ) {        
-        
-            $expires = $_SESSION['FeedTime' . $this->FeedID] + CACHE_TIMEOUT;
-
-            if ( $expires < getdate()['0'] ) {
-                $expired = true;
-            }else{
-                $expired = false;
-            }
-        }else{
-            $expired = true;            
-        }
-        
-        return $expired;    
-    }
-*/    
-    
-} // END class Feed
 

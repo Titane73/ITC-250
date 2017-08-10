@@ -81,7 +81,7 @@ function showFeeds($CatId)
         // process each row
             echo '
                 <tr>
-                    <td><a href="' . VIRTUAL_PATH . 'news/feed_view.php?id=' . $feed->FeedID . '">' . $feed->Name . '</a></td>
+                    <td><a href="' . VIRTUAL_PATH . 'news/feed_view.php?id=' . $feed->FeedID . '&catid=' . $CatId . '">' . $feed->Name . '</a></td>
                     <td>' . $feed->Description . '</td>
                     <td><a href="' . VIRTUAL_PATH . 'news/feed_list.php?id=' . $feed->FeedID . '&act=edit&catid=' . $CatId . '&act=edit">EDIT</a></td>
                 </tr>

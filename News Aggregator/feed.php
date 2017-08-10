@@ -117,10 +117,12 @@ class Feed
         }
     }
         
+
     // function timeStamp - return timestamp of latest cache data 
     public function timeStamp()
     {
-        return $_SESSION['FeedTime'.$this->FeedID];        
+        $date = new DateTime();
+        $date->setTimestamp($_SESSION['FeedTime'.$this->FeedID]);
+        return $date->format('Y-m-d H:i:s') . "\n";
     }
-    
 } // END class Feed
