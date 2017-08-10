@@ -20,19 +20,25 @@ if(isset($_REQUEST['act'])){$myAction = (trim($_REQUEST['act']));}else{$myAction
 
 switch ($myAction) 
 {//check 'act' for type of process
-	case "add": //2) Form for adding new category
+	case "add": // Form for adding new category
 	 	addForm();
 	 	break;
-	case "insert": //3) Insert new category
+	case "insert": // Insert new category
 		insertExecute();
 		break;
-	case "edit": //2) Form for editing existing category
+	case "edit": // Form for editing existing category
 	 	editDisplay();
 	 	break;
-	case "update": //3) Update edited category
+	case "update": // Update edited category
 		updateExecute();
-		break; 
-	default: //1)Show existing categories
+		break;
+    case "clear": // Update edited category
+        // unset all session variables
+        // we only store caches in session
+        // so this clears all caches
+        session_unset();
+ 
+	default: // Show existing categories
 	 	showCategories();
 }
 
@@ -40,8 +46,9 @@ function showCategories()
 {//Select Customer
 	global $config;
 	get_header();
-	echo '<h3 align="center">' . smartTitle() . '</h3>';
-	echo '<h4 align="center">List of Current Categories</h4>';
+	echo '<h3 align="center">RSS News Feed Portal</h3>';
+	echo '<h4 align="center">List of Current News Categories</h4>';
+	echo '<h4 align="center"><a href="' . THIS_PAGE . '?act=clear">Clear all Feed Caches</a></h4>';
 
         $sql = "
             SELECT

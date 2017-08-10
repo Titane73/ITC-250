@@ -24,6 +24,14 @@ class Feed
     public $LastUpdated = '';
     public $IsValid = false;
     
+    // function clearAllCaches - clear all feed caches
+    // the only session variables are for caches so unset all
+    public static function clearAllCaches()
+    {
+        session_unset();
+    }
+        
+    
     public function __construct($id)
     {
         $id = (int)$id;//cast to integer disallows SQL injection
@@ -98,6 +106,15 @@ class Feed
             $expired = true;            
         }
         return $expired;    
+    }
+      
+    // function clearFeedCache - delete session variables for this feed
+    public function clearFeedCache()
+    {
+        if ( isset($_SESSION['Feed' . $this->FeedID]) ) {        
+            unset($_SESSION['Feed' . $this->FeedID]);
+            unset($_SESSION['FeedTime' . $this->FeedID]);
+        }
     }
         
     // function timeStamp - return timestamp of latest cache data 
