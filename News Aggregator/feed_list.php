@@ -60,7 +60,6 @@ function showFeeds($CatId)
     {#records exist - show Feed 
 
         echo '
-        <h3 align="center">RSS News Feed Portal</h3>
         <h3 align="center"> Category: <i><b>' . $myCategory->Name .
             '</b></i></h3>
             <p align="center">' . $myCategory->Description . '</p>
@@ -97,7 +96,7 @@ function showFeeds($CatId)
         echo '<div align="center">ERROR: No such Description for ID=' . $CatId . '</div>';
     }
 
-    echo '<div align="center"><a href="' . VIRTUAL_PATH . 'news/index.php">BACK</a> </div>';
+    echo '<div align="center"><a href="' . VIRTUAL_PATH . 'news/news_index.php">BACK</a> </div>';
 	echo '<div align="center"><a href="' . THIS_PAGE . '?act=add&id=' . $CatId . '">ADD FEED</a></div>';
     get_footer(); #defaults to theme footer or footer_inc.php
 
